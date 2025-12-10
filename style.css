@@ -1,0 +1,969 @@
+//QUIZ
+
+/* =================================
+ * 1. Global & Layout (Dark Theme)
+ * ================================= */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #121212;
+    color: #e0e0e0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    transition: background-color 0.5s ease;
+}
+
+#quiz-container {
+    background: #1e1e1e;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    width: 90%;
+    max-width: 750px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* =================================
+ * 2. Theme Toggle
+ * ================================= */
+#theme-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: 2px solid #00bcd4;
+    color: #00bcd4;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2em;
+    z-index: 100;
+    transition: all 0.3s;
+}
+
+#theme-toggle:hover {
+    background-color: #00bcd4;
+    color: #121212;
+    transform: rotate(90deg);
+}
+
+/* =================================
+ * 3. Header & Typography
+ * ================================= */
+h1 {
+    color: #00bcd4;
+    margin-bottom: 25px;
+    letter-spacing: 1px;
+    font-size: 2.2em;
+    text-transform: uppercase;
+}
+
+h2 {
+    font-size: 1.6em;
+    margin-bottom: 25px;
+    text-align: left;
+    color: #f0f0f0;
+}
+
+/* =================================
+ * 4. Header Info & Progress
+ * ================================= */
+#header-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 10px 15px;
+    background-color: #2c2c2c;
+    border-radius: 8px;
+    border: 1px solid #3a3a3a;
+    font-weight: bold;
+}
+
+#header-info div {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+#progress {
+    color: #00bcd4;
+}
+
+#current-score {
+    color: #4caf50;
+}
+
+#streak-counter {
+    color: #ff9800;
+}
+
+@keyframes streak-pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+.streak-pop {
+    animation: streak-pop 0.5s ease;
+}
+
+/* =================================
+ * 5. Timer Styling
+ * ================================= */
+#timer-bar {
+    height: 8px;
+    background-color: #3a3a3a;
+    border-radius: 4px;
+    margin-bottom: 25px;
+    overflow: hidden;
+}
+
+#timer-progress {
+    height: 100%;
+    width: 100%;
+    background-color: #ff9800;
+    transition: width 1s linear;
+    transform-origin: left;
+}
+
+/* =================================
+ * 6. Power-up System
+ * ================================= */
+.power-up-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.power-up {
+    background-color: #00bcd4;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+    font-size: 0.8em;
+    text-align: center;
+    position: relative;
+}
+
+.power-up:hover:not(:disabled) {
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: 0 5px 15px rgba(0, 188, 212, 0.4);
+}
+
+.power-up:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #666;
+}
+
+.power-up .power-up-icon {
+    font-size: 1.5em;
+    margin-bottom: 5px;
+}
+
+.power-up .power-up-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #ff9800;
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.8em;
+}
+
+.power-up-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    white-space: nowrap;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+
+.power-up:hover .power-up-tooltip {
+    opacity: 1;
+}
+
+/* =================================
+ * 7. Options & Interactivity
+ * ================================= */
+.options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.option-btn {
+    padding: 18px;
+    background-color: #2c2c2c;
+    border: 2px solid #3a3a3a;
+    border-radius: 10px;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s, transform 0.1s;
+    color: #e0e0e0;
+    font-weight: 500;
+}
+
+.option-btn:hover:not(.selected) {
+    background-color: #383838;
+    border-color: #00bcd4;
+    transform: translateY(-1px);
+}
+
+.option-btn.selected {
+    background-color: #00bcd4;
+    color: #121212;
+    border-color: #00bcd4;
+    font-weight: bold;
+}
+
+/* =================================
+ * 8. Action Buttons - FIXED ALIGNMENT
+ * ================================= */
+.result-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 20px;
+    align-items: center;
+}
+
+#submit-btn, #next-btn, #restart-btn, #share-btn, #review-btn, #close-review {
+    padding: 12px 25px;
+    margin: 0;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.1em;
+    letter-spacing: 0.5px;
+    transition: background-color 0.3s, transform 0.1s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+}
+
+#submit-btn:enabled {
+    background-color: #4caf50;
+    color: #121212;
+}
+
+#submit-btn:enabled:hover {
+    background-color: #66bb6a;
+    transform: translateY(-2px);
+}
+
+#submit-btn:disabled {
+    background-color: #3a3a3a;
+    color: #757575;
+    cursor: not-allowed;
+}
+
+#next-btn {
+    background-color: #00bcd4;
+    color: #121212;
+}
+
+#next-btn:hover {
+    background-color: #26c6da;
+    transform: translateY(-2px);
+}
+
+#restart-btn {
+    background-color: #795548;
+    color: white;
+}
+
+#restart-btn:hover {
+    background-color: #8d6e63;
+    transform: translateY(-2px);
+}
+
+#share-btn, #review-btn {
+    background-color: #2196f3;
+    color: white;
+    margin: 10px;
+}
+
+#share-btn:hover, #review-btn:hover {
+    background-color: #0d8bf2;
+    transform: translateY(-2px);
+}
+
+#close-review {
+    background-color: #795548;
+    color: white;
+}
+
+#close-review:hover {
+    background-color: #8d6e63;
+    transform: translateY(-2px);
+}
+
+/* =================================
+ * 9. Feedback & Explanation
+ * ================================= */
+#feedback {
+    margin-top: 20px;
+    padding: 18px;
+    border-radius: 10px;
+    text-align: left;
+    font-weight: bold;
+}
+
+.correct {
+    background-color: #1a5e20;
+    color: #c8e6c9;
+    border: 1px solid #388e3c;
+}
+
+.incorrect {
+    background-color: #7f2020;
+    color: #ffcdd2;
+    border: 1px solid #d32f2f;
+}
+
+#explanation-box {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #e0e0e0;
+}
+
+/* =================================
+ * 10. Result Screen Styling
+ * ================================= */
+#summary-box {
+    padding: 25px;
+    border: 1px solid #3a3a3a;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    background-color: #2c2c2c;
+}
+
+#topic-feedback-area {
+    text-align: left;
+    margin-top: 20px;
+    padding-bottom: 10px;
+}
+
+#topic-list {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+#topic-list li {
+    background-color: #381010;
+    color: #ffcdd2;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    border-left: 5px solid #d32f2f;
+}
+
+.score-summary {
+    text-align: center;
+}
+
+.overall-score {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #00bcd4;
+    margin: 15px 0;
+}
+
+.score-details {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 15px;
+}
+
+.best-score, .best-streak {
+    color: #ffeb3b;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+/* =================================
+ * 11. Review Container
+ * ================================= */
+#review-container {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #2c2c2c;
+    border-radius: 10px;
+    border: 1px solid #3a3a3a;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.review-question {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #3a3a3a;
+}
+
+.review-question-header {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.review-question-header.correct {
+    background-color: #1a5e20;
+    color: #c8e6c9;
+}
+
+.review-question-header.incorrect {
+    background-color: #7f2020;
+    color: #ffcdd2;
+}
+
+.review-status {
+    float: right;
+    font-size: 1.2em;
+}
+
+.review-options {
+    margin: 10px 0;
+}
+
+.review-option {
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 4px;
+    background-color: #3a3a3a;
+}
+
+.review-option.correct-answer {
+    background-color: #1a5e20;
+    border-left: 4px solid #4caf50;
+}
+
+.review-option.user-answer-incorrect {
+    background-color: #7f2020;
+    border-left: 4px solid #d32f2f;
+}
+
+.review-explanation {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 5px;
+    font-style: italic;
+}
+
+/* =================================
+ * 12. Keyboard Navigation Help
+ * ================================= */
+.keyboard-help {
+    font-size: 0.9em;
+    color: #888;
+    text-align: center;
+    margin-top: 15px;
+    font-style: italic;
+}
+
+/* =================================
+ * 13. Hidden Class
+ * ================================= */
+.hidden {
+    display: none;
+}
+
+/* =================================
+ * 14. Party Popper Animation
+ * ================================= */
+@keyframes correct-pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(0, 188, 212, 0.7);
+    }
+    70% {
+        transform: scale(1.02);
+        box-shadow: 0 0 0 20px rgba(0, 188, 212, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+    }
+}
+
+.confetti-animation-trigger {
+    animation: correct-pulse 0.5s ease-out;
+}
+
+/* =================================
+ * 15. LIGHT THEME STYLES - VIBRANT YET SOOTHING
+ * ================================= */
+body.light-theme {
+    background-color: #f0f5ff;
+    color: #2c3e50;
+    background-image: linear-gradient(135deg, #f0f5ff 0%, #e6f0ff 100%);
+}
+
+body.light-theme #quiz-container {
+    background: #ffffff;
+    box-shadow: 0 15px 35px rgba(52, 152, 219, 0.12), 0 5px 15px rgba(0, 0, 0, 0.06);
+    border: 1px solid #d6e4f0;
+    background: linear-gradient(145deg, #ffffff 0%, #f8faff 100%);
+}
+
+body.light-theme h1 {
+    color: #2980b9;
+    text-shadow: 1px 1px 3px rgba(41, 128, 185, 0.1);
+    background: linear-gradient(135deg, #2980b9, #3498db);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+body.light-theme h2 {
+    color: #34495e;
+    font-weight: 600;
+}
+
+body.light-theme #header-info {
+    background-color: #e8f4fc;
+    border-color: #c5e1f9;
+    color: #2c3e50;
+    background: linear-gradient(to right, #e8f4fc, #d9ecff);
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.1);
+}
+
+body.light-theme #theme-toggle {
+    border-color: #3498db;
+    color: #3498db;
+    background-color: white;
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
+}
+
+body.light-theme #theme-toggle:hover {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    transform: rotate(90deg);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.25);
+}
+
+body.light-theme #progress {
+    color: #3498db;
+    font-weight: 600;
+}
+
+body.light-theme #current-score {
+    color: #27ae60;
+    font-weight: 600;
+}
+
+body.light-theme #streak-counter {
+    color: #e67e22;
+    font-weight: 600;
+}
+
+body.light-theme #timer-bar {
+    background-color: #e0eaf5;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme #timer-progress {
+    background: linear-gradient(90deg, #f39c12, #f1c40f);
+    box-shadow: 0 0 10px rgba(243, 156, 18, 0.3);
+}
+
+body.light-theme .power-up {
+    background: linear-gradient(145deg, #3498db, #2980b9);
+    color: white;
+    box-shadow: 0 6px 15px rgba(52, 152, 219, 0.25);
+    border: 2px solid white;
+}
+
+body.light-theme .power-up:hover:not(:disabled) {
+    box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
+    background: linear-gradient(145deg, #2980b9, #3498db);
+    transform: translateY(-5px) scale(1.1);
+}
+
+body.light-theme .power-up .power-up-count {
+    background: linear-gradient(145deg, #e67e22, #f39c12);
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(230, 126, 34, 0.3);
+}
+
+body.light-theme .power-up-tooltip {
+    background-color: #2c3e50;
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    font-weight: 500;
+    border: 1px solid #3498db;
+}
+
+body.light-theme .option-btn {
+    background-color: #f8faff;
+    border-color: #d1e3ff;
+    color: #2c3e50;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+}
+
+body.light-theme .option-btn:hover:not(.selected) {
+    background-color: #e8f0ff;
+    border-color: #3498db;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
+}
+
+body.light-theme .option-btn.selected {
+    background: linear-gradient(145deg, #3498db, #2980b9);
+    color: white;
+    border-color: #3498db;
+    box-shadow: 0 5px 20px rgba(52, 152, 219, 0.3);
+    font-weight: 600;
+}
+
+body.light-theme #submit-btn:enabled {
+    background: linear-gradient(145deg, #27ae60, #2ecc71);
+    color: white;
+    box-shadow: 0 6px 15px rgba(46, 204, 113, 0.3);
+    font-weight: 600;
+}
+
+body.light-theme #submit-btn:enabled:hover {
+    background: linear-gradient(145deg, #229954, #27ae60);
+    box-shadow: 0 8px 20px rgba(46, 204, 113, 0.4);
+    transform: translateY(-3px);
+}
+
+body.light-theme #submit-btn:disabled {
+    background-color: #e0e6ed;
+    color: #95a5a6;
+    box-shadow: none;
+}
+
+body.light-theme #next-btn {
+    background: linear-gradient(145deg, #3498db, #2980b9);
+    color: white;
+    box-shadow: 0 6px 15px rgba(52, 152, 219, 0.3);
+    font-weight: 600;
+}
+
+body.light-theme #next-btn:hover {
+    background: linear-gradient(145deg, #2980b9, #3498db);
+    box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
+    transform: translateY(-3px);
+}
+
+body.light-theme #restart-btn {
+    background: linear-gradient(145deg, #e67e22, #f39c12);
+    color: white;
+    box-shadow: 0 6px 15px rgba(230, 126, 34, 0.3);
+    font-weight: 600;
+}
+
+body.light-theme #restart-btn:hover {
+    background: linear-gradient(145deg, #d35400, #e67e22);
+    box-shadow: 0 8px 20px rgba(230, 126, 34, 0.4);
+    transform: translateY(-3px);
+}
+
+body.light-theme #share-btn, 
+body.light-theme #review-btn {
+    background: linear-gradient(145deg, #9b59b6, #8e44ad);
+    color: white;
+    box-shadow: 0 6px 15px rgba(155, 89, 182, 0.3);
+    font-weight: 600;
+}
+
+body.light-theme #share-btn:hover, 
+body.light-theme #review-btn:hover {
+    background: linear-gradient(145deg, #8e44ad, #9b59b6);
+    box-shadow: 0 8px 20px rgba(155, 89, 182, 0.4);
+    transform: translateY(-3px);
+}
+
+body.light-theme #close-review {
+    background: linear-gradient(145deg, #7f8c8d, #95a5a6);
+    color: white;
+    box-shadow: 0 6px 15px rgba(127, 140, 141, 0.3);
+    font-weight: 600;
+}
+
+body.light-theme #close-review:hover {
+    background: linear-gradient(145deg, #95a5a6, #7f8c8d);
+    box-shadow: 0 8px 20px rgba(127, 140, 141, 0.4);
+    transform: translateY(-3px);
+}
+
+body.light-theme #feedback.correct {
+    background: linear-gradient(145deg, #d4f1d8, #c2e9c9);
+    color: #155724;
+    border: 2px solid #27ae60;
+    box-shadow: 0 4px 12px rgba(46, 204, 113, 0.15);
+    font-weight: 600;
+}
+
+body.light-theme #feedback.incorrect {
+    background: linear-gradient(145deg, #fad2d2, #f8c6c6);
+    color: #721c24;
+    border: 2px solid #e74c3c;
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.15);
+    font-weight: 600;
+}
+
+body.light-theme #explanation-box {
+    background: linear-gradient(145deg, #e8f4fc, #d9ecff);
+    color: #2c3e50;
+    border-left: 4px solid #3498db;
+    box-shadow: 0 3px 10px rgba(52, 152, 219, 0.1);
+}
+
+body.light-theme #summary-box {
+    background: linear-gradient(145deg, #e8f4fc, #d9ecff);
+    border-color: #c5e1f9;
+    box-shadow: 0 5px 20px rgba(52, 152, 219, 0.1);
+    border: 2px solid #d6e4f0;
+}
+
+body.light-theme .overall-score {
+    color: #2980b9;
+    font-size: 1.6em;
+    font-weight: 700;
+    text-shadow: 1px 1px 2px rgba(41, 128, 185, 0.1);
+}
+
+body.light-theme #topic-list li {
+    background: linear-gradient(145deg, #ffebee, #ffdbde);
+    color: #c0392b;
+    border-left: 4px solid #e74c3c;
+    font-weight: 500;
+    box-shadow: 0 3px 8px rgba(231, 76, 60, 0.1);
+}
+
+body.light-theme .best-score,
+body.light-theme .best-streak {
+    color: #f39c12;
+    font-weight: 700;
+    text-shadow: 1px 1px 2px rgba(243, 156, 18, 0.1);
+}
+
+body.light-theme #review-container {
+    background: linear-gradient(145deg, #f8faff, #f0f5ff);
+    border-color: #d1e3ff;
+    box-shadow: inset 0 2px 10px rgba(52, 152, 219, 0.08);
+    border: 2px solid #e0eaf5;
+}
+
+body.light-theme .review-question {
+    border-bottom-color: #d1e3ff;
+}
+
+body.light-theme .review-question-header.correct {
+    background: linear-gradient(145deg, #d4f1d8, #c2e9c9);
+    color: #155724;
+    font-weight: 600;
+}
+
+body.light-theme .review-question-header.incorrect {
+    background: linear-gradient(145deg, #fad2d2, #f8c6c6);
+    color: #721c24;
+    font-weight: 600;
+}
+
+body.light-theme .review-option {
+    background-color: #f0f5ff;
+    color: #2c3e50;
+    border: 1px solid #d6e4f0;
+}
+
+body.light-theme .review-option.correct-answer {
+    background: linear-gradient(145deg, #d4f1d8, #c2e9c9);
+    border-left: 4px solid #27ae60;
+    color: #155724;
+    font-weight: 600;
+}
+
+body.light-theme .review-option.user-answer-incorrect {
+    background: linear-gradient(145deg, #fad2d2, #f8c6c6);
+    border-left: 4px solid #e74c3c;
+    color: #721c24;
+    font-weight: 600;
+}
+
+body.light-theme .review-explanation {
+    background-color: rgba(52, 152, 219, 0.08);
+    color: #2c3e50;
+    border-left: 3px solid #3498db;
+    font-style: normal;
+    font-weight: 500;
+}
+
+body.light-theme .keyboard-help {
+    color: #7f8c8d;
+    font-weight: 500;
+    background-color: #f8f9fa;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+}
+
+/* =================================
+ * 16. Animations for Light Theme
+ * ================================= */
+@keyframes light-pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.7);
+    }
+    70% {
+        transform: scale(1.03);
+        box-shadow: 0 0 0 20px rgba(52, 152, 219, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+    }
+}
+
+body.light-theme .confetti-animation-trigger {
+    animation: light-pulse 0.5s ease-out;
+}
+
+/* Enhanced hover effects for light theme */
+body.light-theme .option-btn, 
+body.light-theme .power-up,
+body.light-theme #submit-btn,
+body.light-theme #next-btn,
+body.light-theme #restart-btn,
+body.light-theme #share-btn,
+body.light-theme #review-btn {
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Active state for better feedback */
+body.light-theme .option-btn:active:not(.selected) {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(52, 152, 219, 0.15);
+}
+
+/* Focus states for accessibility */
+body.light-theme .option-btn:focus,
+body.light-theme .power-up:focus,
+body.light-theme #submit-btn:focus,
+body.light-theme #next-btn:focus,
+body.light-theme #restart-btn:focus,
+body.light-theme #share-btn:focus,
+body.light-theme #review-btn:focus {
+    outline: 3px solid rgba(52, 152, 219, 0.5);
+    outline-offset: 2px;
+}
+
+/* =================================
+ * 17. Responsive Design
+ * ================================= */
+@media (max-width: 768px) {
+    #quiz-container {
+        padding: 20px;
+        width: 95%;
+    }
+    
+    h1 {
+        font-size: 1.8em;
+        margin-top: 30px;
+    }
+    
+    h2 {
+        font-size: 1.4em;
+    }
+    
+    #header-info {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+    
+    .power-up-container {
+        flex-wrap: wrap;
+    }
+    
+    .result-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    #review-container {
+        max-height: 400px;
+    }
+}
+
+@media (max-width: 480px) {
+    #quiz-container {
+        padding: 15px;
+    }
+    
+    h1 {
+        font-size: 1.6em;
+    }
+    
+    h2 {
+        font-size: 1.2em;
+    }
+    
+    .option-btn {
+        padding: 14px;
+        font-size: 0.9em;
+    }
+    
+    #submit-btn, #next-btn, #restart-btn, #share-btn, #review-btn, #close-review {
+        padding: 10px 20px;
+        font-size: 1em;
+        min-height: 40px;
+    }
+    
+    .power-up {
+        width: 50px;
+        height: 50px;
+        font-size: 0.7em;
+    }
+    
+    .score-details {
+        flex-direction: column;
+        gap: 15px;
+    }
+}

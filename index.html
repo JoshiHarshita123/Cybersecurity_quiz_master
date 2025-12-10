@@ -1,0 +1,73 @@
+<!--QUIZ-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cybersecurity Quiz</title>
+    <link rel="stylesheet" href="style.css"> 
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+    <div id="quiz-container">
+        <button id="theme-toggle" title="Toggle theme">🌓</button>
+        <h1>🛡️ Cybersecurity Quiz</h1>
+        
+        <div id="quiz">
+            <div id="header-info">
+                <div id="progress">Question <span id="current-question-num">1</span>/<span id="total-questions">10</span></div>
+                <div id="current-score">Score: <span>0</span></div>
+                <div id="streak-counter">Streak: <span>0</span> 🔥</div>
+            </div>
+            
+            <div id="timer-bar">
+                <div id="timer-progress"></div>
+            </div>
+            <h2 id="question">Loading Questions...</h2>
+            
+            <div id="options-container" class="options-container">
+            </div>
+            
+            <button id="submit-btn" disabled>Submit Answer</button>
+            
+            <div id="feedback" class="hidden">
+                <p id="feedback-message"></p>
+                <div id="explanation-box">
+                    <strong>Explanation:</strong>
+                    <p id="explanation-text"></p>
+                </div>
+                <button id="next-btn" class="hidden">Next Question &rarr;</button> 
+            </div>
+        </div>
+
+        <div id="result-container" class="hidden">
+            <h2>Quiz Complete! 🎉</h2>
+            
+            <div id="summary-box">
+                <p id="score-text"></p>
+                <h3 id="general-feedback"></h3>
+            </div>
+            
+            <div id="topic-feedback-area">
+                <h3>Areas for Improvement:</h3>
+                <ul id="topic-list">
+                </ul>
+            </div>
+            
+            <div class="result-buttons">
+                <button id="restart-btn">Restart Quiz</button>
+                <button id="share-btn">📤 Share Results</button>
+                <button id="review-btn">📝 Review Questions</button>
+            </div>
+            
+            <div id="review-container" class="hidden">
+                <h3>Question Review</h3>
+                <div id="review-questions"></div>
+                <button id="close-review">Close Review</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="quiz.js" type="module"></script>
+</body>
+</html>
